@@ -1,0 +1,38 @@
+# .gitignore for infrastructure directory
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+tfplan
+crash.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+
+# Kubernetes
+kubeconfig
+kubeconfig-*
+
+# Secrets and credentials
+secrets/
+*.key
+*.crt
+credentials.json

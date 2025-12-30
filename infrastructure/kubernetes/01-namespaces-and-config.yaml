@@ -1,0 +1,46 @@
+---
+# Namespace for CDN services
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cdn-global
+  labels:
+    environment: development
+
+---
+# ConfigMap for database connection info (local development)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cdn-global-config
+  namespace: cdn-global
+data:
+  DB_HOST: "host.docker.internal"  # For Docker Desktop on Mac/Windows
+  DB_PORT: "5432"
+  DB_NAME: "cdn_global"
+  DB_USER: "cdn_admin_global"
+  MINIO_ENDPOINT: "host.docker.internal:9000"
+  MINIO_BUCKET: "cdn-config-bundles"
+  MINIO_USE_SSL: "false"
+
+---
+# Secret for database credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cdn-global-secrets
+  namespace: cdn-global
+type: Opaque
+stringData:
+  DB_PASSWORD: "ChangeMe123!Global"
+  MINIO_ACCESS_KEY: "minioadmin"
+  MINIO_SECRET_KEY: "minioadmin123"
+
+---
+# Namespace for regional services
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cdn-regional
+  labels:
+    environment: development

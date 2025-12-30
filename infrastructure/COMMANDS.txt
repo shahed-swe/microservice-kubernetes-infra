@@ -1,0 +1,97 @@
+CDN INFRASTRUCTURE - STARTUP COMMANDS
+=====================================
+
+QUICK START (All-in-One):
+------------------------
+cd /Users/k53/Desktop/flashsites/infrastructure
+chmod +x startup.sh
+./startup.sh
+
+
+STEP-BY-STEP STARTUP:
+---------------------
+
+1. Start Docker Services (PostgreSQL, MinIO, pgAdmin):
+   cd /Users/k53/Desktop/flashsites/infrastructure
+   chmod +x setup-local.sh
+   ./setup-local.sh
+
+2. Deploy to Kubernetes:
+   cd /Users/k53/Desktop/flashsites/infrastructure
+   chmod +x deploy-to-k8s.sh
+   ./deploy-to-k8s.sh
+
+3. Test Connectivity:
+   cd /Users/k53/Desktop/flashsites/infrastructure
+   ./test-connectivity.sh
+
+
+USING MAKEFILE (Easier):
+------------------------
+
+cd /Users/k53/Desktop/flashsites/infrastructure
+
+make local-setup      # Start Docker services
+make local-deploy     # Deploy to Kubernetes
+make local-test       # Test everything
+make local-clean      # Stop everything
+
+
+ACCESS YOUR SERVICES:
+---------------------
+
+Docker Services (Direct Access):
+  PostgreSQL Global:   psql -h localhost -p 5432 -U cdn_admin_global -d cdn_global
+  PostgreSQL Regional: psql -h localhost -p 5433 -U cdn_admin_regional -d cdn_regional_uswest
+  MinIO Console:       http://localhost:9001 (minioadmin / minioadmin123)
+  pgAdmin:             http://localhost:5050 (admin@example.com / admin123)
+
+Kubernetes Services (Port Forward):
+  Global Nginx:        kubectl port-forward -n cdn-global svc/nginx-test-service 8080:80
+  Regional Nginx:      kubectl port-forward -n cdn-regional svc/nginx-test-service 8081:80
+  Grafana:             http://localhost:3000 (admin / admin123)
+  Prometheus:          kubectl port-forward -n monitoring svc/prometheus 9090:9090
+
+
+CHECK STATUS:
+-------------
+
+Docker Status:
+  docker ps
+  docker-compose -f docker/docker-compose.yml ps
+
+Kubernetes Status:
+  kubectl get namespaces
+  kubectl get pods -n cdn-global
+  kubectl get pods -n cdn-regional
+  kubectl get pods -n monitoring
+  kubectl get svc -A
+
+
+STOP EVERYTHING:
+----------------
+
+Docker:
+  cd /Users/k53/Desktop/flashsites/infrastructure/docker
+  docker-compose down
+
+Kubernetes:
+  kubectl delete namespace cdn-global
+  kubectl delete namespace cdn-regional
+  kubectl delete namespace monitoring
+
+
+CONNECTION STRINGS:
+-------------------
+
+PostgreSQL Global:
+  postgresql://cdn_admin_global:ChangeMe123!Global@localhost:5432/cdn_global
+
+PostgreSQL Regional:
+  postgresql://cdn_admin_regional:ChangeMe123!Regional@localhost:5433/cdn_regional_uswest
+
+MinIO S3:
+  Endpoint: localhost:9000
+  Access Key: minioadmin
+  Secret Key: minioadmin123
+  Bucket: cdn-config-bundles
